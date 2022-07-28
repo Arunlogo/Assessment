@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+
+	<title>Registration</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<p th:text="${noOfBooks}"></p>
+		</div>
+		<div class="container">
+
+			<p th:if="${#strings.equals(userId, 'Borrower')}"><a th:href="@{'/book/findBooks/' + ${userId}}">View
+					Books</a>
+			</p>
+
+			<p th:if="${#strings.equals(userId, 'Librarian')}"><a th:href="@{'/book/createBook/' + ${userId}}">Add a new
+					Book</a>
+			</p>
+
+			<input type="text" id="searchValue" name="searchValue" class="form-control" placeholder="Serach" />
+			<a href="javascript:;"
+				onclick="this.href='/book/searchBooks/' + document.getElementById('searchValue').value">Search</a>
+
+			<!--<a th:href="@{'/book/searchBooks/' + ${userId}} + '/'+">Search</a>-->
+			<table class="table">
+				<thead>
+					<tr>
+						<th> Title </th>
+						<th> Author </th>
+						<th> Published Date </th>
+						<th> No of Books</th>
+						<th th:if="${#strings.equals(userId, 'Borrower')}"> Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${books.empty}">
+						<td colspan="2"> No Books Available </td>
+					</tr>
+					<tr th:each="book : ${books}">
+						<td><span th:text="${book.name}"></span></td>
+						<td><span th:text="${book.author}"></span></td>
+						<td><span th:text="${#dates.format(book.publishDate, 'dd-MMM-yyyy')}"></span>
+						</td>
+						<!--"${potentially_complex_expression} ? 'Hello' : 'Something else'"-->
+						<td><span th:text="${book.bookCount>0}? ${book.bookCount} : 'Out of stock'"></span>
+						</td>
+
+						<td th:if=" ${#strings.equals(userId, 'Borrower' )}"><a
+								th:href="@{'/book/borrowBook/' + ${userId} + '/' + ${book.id}}">Borrow</a></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div th:if="${totalPages > 1}">
+				<div class="row col-sm-15">
+					<div class="col-sm-5">
+						Total Rows: [[${totalItems}]]
+					</div>
+					<div class="col-sm-3">
+						<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+							<a th:if="${currentPage != i}" th:href="@{'/book/page/' + ${i}}">[[${i}]]</a>
+							<span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+						</span>
+					</div>
+					<div class="col-sm-2">
+						<a th:if="${currentPage < totalPages}" th:href="@{'/book/page/' + ${currentPage + 1}}">Next</a>
+						<span th:unless="${currentPage < totalPages}">Next</span>
+					</div>
+					<br>
+					<div class="col-sm-1">
+						<a th:if="${currentPage < totalPages}" th:href="@{'/book/page/' + ${totalPages}}">Last</a>
+						<span th:unless="${currentPage < totalPages}">Last</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<br>
+	<br>
+
+	<input type="hidden" id="userId" value="${userId}" name="userId" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js/}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+
+</body>
+
+</html>

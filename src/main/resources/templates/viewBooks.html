@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+
+	<title>Registration</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+
+		<div class="container">
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th> Title </th>
+						<th> Author </th>
+						<th> Published Date </th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${booksList.empty}">
+						<td colspan="2"> No Books Available </td>
+					</tr>
+					<tr th:each="book : ${booksList}">
+						<td><span th:text="${book.name}"></span></td>
+						<td><span th:text="${book.author}"></span></td>
+						<td><span th:text="${#dates.format(book.publishDate, 'dd-MMM-yyyy')}"></span>
+						</td>
+
+						<td><a th:href="@{'/book/returnBook/' + ${userId} + '/' + ${book.id}}">Return</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</nav>
+
+	<br>
+	<br>
+
+	<input type="hidden" id="userId" value="${userId}" name="userId" />
+	<script type="text/javascript" th:src="@{/webjars/jquery/3.6.0/jquery.min.js/}"></script>
+	<script type="text/javascript" th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.min.js}"></script>
+
+</body>
+
+</html>
